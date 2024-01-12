@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Senhas</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+            background: url('seu-fundo.jpg');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .password-generator {
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+            width: 450px;
+            height: 450px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #password {
+            width: 60%;
+            margin-bottom: 15px;
+            padding: 10px;
+            font-size: 1.2em;
+            border: none;
+            outline: none;
+            background-color: #ecf0f1;
+            color: #333;
+            border-radius: 10px;
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            width: 60%;
+        }
+
+        label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        input[type="checkbox"] {
+            margin-right: 5px;
+        }
+
+        button {
+            width: 70%;
+            padding: 12px;
+            font-size: 1em;
+            border: none;
+            background-color: #2ecc71;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            border-radius: 10px;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #27ae60;
+            transform: scale(1.05);
+        }
+
+        #copyButton {
+            margin-top: 20px;
+            width: 70%; /* Adicionando largura ao botão de cópia */
+        }
+    </style>
+</head>
+<body>
+    <div class="password-generator">
+        <input type="text" id="password" readonly>
+        <div class="options-container">
+            <label><input type="checkbox" id="uppercaseCheckbox">Incluir letras maiúsculas?</label>
+            <label><input type="checkbox" id="lowercaseCheckbox">Incluir letras minúsculas?</label>
+            <label><input type="checkbox" id="numbersCheckbox">Incluir números?</label>
+            <label><input type="checkbox" id="specialCharsCheckbox">Incluir caracteres especiais?</label>
+        </div>
+        <button onclick="generatePassword()">Gerar Senha</button>
+        <button onclick="copyToClipboard()" id="copyButton" style="display: none;">Copiar Senha</button>
+    </div>
+    <script>
+        function generatePassword() {
+            const length = prompt('Digite a quantidade de dígitos desejada para a senha (somente números):');
+            
+            if (!length || isNaN(length) || length <= 0) {
+                alert('Por favor, insira uma quantidade válida de dígitos.');
+                return;
+            }
+
+            const uppercaseIncluded = document.getElementById('uppercaseCheckbox').checked;
+            const lowercaseIncluded = document.getElementById('lowercaseCheckbox').checked;
+            const numbersIncluded = document.getElementById('numbersCheckbox').checked;
+            const specialCharsIncluded = document.getElementById('specialCharsCheckbox').checked;
+
+            const uppercaseChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            const lowercaseChars = 'abcdefghijklmnopqrstuvwxyz';
+            const numberChars = '0123456789';
+            const specialChars = '!@#$%^&*()_-+=<>?/';
+
+            let allChars = '';
+
+            if (uppercaseIncluded) {
+                allChars += uppercaseChars;
+            }
+            if (lowercaseIncluded) {
+                allChars += lowercaseChars;
+            }
+            if (numbersIncluded) {
+                allChars += numberChars;
+            }
+            if (specialCharsIncluded) {
+                allChars += specialChars;
+            }
+
+            if (!allChars) {
+                alert('Selecione pelo menos uma opção de caracteres.');
+                return;
+            }
+
+            let newPassword = '';
+            for (let i = 0; i < length; i++) {
+                const randomIndex = Math.floor(Math.random() * allChars.length);
+                newPassword += allChars.charAt(randomIndex);
+            }
+
+            document.getElementById('password').value = newPassword;
+            document.getElementById('copyButton').style.display = 'block';
+        }
+
+        function copyToClipboard() {
+            const passwordField = document.getElementById('password');
+            passwordField.select();
+            document.execCommand('copy');
+            alert('Senha copiada para a área de transferência.');
+        }
+    </script>
+</body>
+</html>
